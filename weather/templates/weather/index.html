@@ -1,0 +1,11 @@
+{% include 'base.html' %}
+
+{% block content %}
+
+    <form class="form-group mt-5 text-center" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <button class="btn btn-lg btn-outline-secondary" type="submit">Submit</button>
+    </form>
+
+{% endblock content %}
