@@ -2,7 +2,20 @@ from datetime import datetime
 
 import requests
 
-from TranasctionWeather.settings import MAP_BOX_KEY, WEATHER_KEY
+# WEATHER_KEY = '435b1702aae2c4632c94e8b284975caf'
+# MAP_BOX_KEY = 'pk.eyJ1IjoicHJvbWciLCJhIjoiY2tsY2pwN21yMWk5ejJvbjBjc3hhaTF1cSJ9.lE18s1uVpveDZnQGTL_e8Q'
+from weather.models import Keys
+
+MAP_BOX_KEY = ''
+WEATHER_KEY = ''
+
+if Keys.objects.filter(name='Weather').exists():
+    wkey = Keys.objects.get(name='Weather')
+    WEATHER_KEY = wkey.key
+
+if Keys.objects.filter(name='Map').exists():
+    mkey = Keys.objects.get(name='Map')
+    MAP_BOX_KEY = mkey.key
 
 
 def weather(address):

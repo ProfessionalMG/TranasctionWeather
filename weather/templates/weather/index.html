@@ -1,11 +1,79 @@
+{% load static %}
 {% include 'base.html' %}
+{% load crispy_forms_tags %}
 
 {% block content %}
 
-    <form class="form-group mt-5 text-center" method="post">
-        {% csrf_token %}
-        {{ form }}
-        <button class="btn btn-lg btn-outline-secondary" type="submit">Submit</button>
-    </form>
+    <div class="col-8 mt-5">
+        <div id="alert-box"></div>
+        <form id="a-form" class="form-group mt-5 text-center" method="post">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <button class="btn btn-lg btn-outline-secondary" type="submit">Submit</button>
+        </form>
+    </div>
+
+    {#    <div class="col-4 mt-5">#}
+    {#        {% if forecasts %}#}
+    {#            <table class="table table-dark">#}
+    {#                <thead>#}
+    {#                <tr>#}
+    {#                    <th scope="col">Address</th>#}
+    {#                    <th scope="col">Date</th>#}
+    {#                    <th scope="col">Temp</th>#}
+    {#                </tr>#}
+    {#                </thead>#}
+    {#                <tbody>#}
+    {#                {% for cast in forecasts %}#}
+    {#                    <tr>#}
+    {#                        <td>{{ cast.address }}</td>#}
+    {#                        <td>{{ cast.date }}</td>#}
+    {#                        <td>{{ cast.feels_like }}</td>#}
+    {#                    </tr>#}
+    {#                {% endfor %}#}
+    {#                </tbody>#}
+    {#            </table>#}
+    {#        {% endif %}#}
+    {##}
+    {#    </div>#}
 
 {% endblock content %}
+
+{% block javascript %}
+
+    <script>
+        const alertBox = document.getElementById('alert-box')
+        const form = document.getElementById('a-form')
+        const address = document.getElementById('id_address')
+        const csrf = document.getElementsByName('csrfmiddlewaretoken')
+        const url = '/home'
+
+        form.addEventListener('submit', ev => {
+            e.preventDefault()
+            const fd = new FormData()
+            fd.append('csrfmiddlewaretoken', csrf[0].value)
+            fd.append('address', address.value)
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: fd,
+                cache: false,
+                contentType: false,
+                processData: false,
+            })
+        })
+    </script>
+    {#    <script>#}
+    {#        $(document).ready(function () {#}
+    {#            var $myForm = $('.form-group mt-5 text-center')#}
+    {#            $myForm.submit(function (event) {#}
+    {#                event.preventDefault()#}
+    {#                var $formData = $(this).serialize()#}
+    {#            })#}
+    {#        })#}
+    {#    </script>#}
+
+
+
+{% endblock javascript %}
