@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    {% for q in query %}
+
+        <p>{{ q.date }}</p>
+        <p>{{ q.address }}</p>
+        <p>{{ q.feels_like }}</p>
+
+    {% endfor %}
+
+{% endblock content %}

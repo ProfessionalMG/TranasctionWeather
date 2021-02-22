@@ -72,8 +72,12 @@ WSGI_APPLICATION = 'TranasctionWeather.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': str(os.path.join(BASE_DIR, "db.sqlite3")),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'heroku_f4ca741a9ac7ce0',
+        'USER': 'b6646295d4c688',
+        'PASSWORD': 'aa0ccec0',
+        'HOST': 'eu-cdbr-west-03.cleardb.net',
+        'PORT': '3306'
     }
 }
 
@@ -113,11 +117,13 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 MEDIA_URL = '/images/'
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, '../static')
-]
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, '../static')
+# ]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, '../static/img')
 

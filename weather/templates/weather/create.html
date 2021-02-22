@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load crispy_forms_filters %}
+
+
+{% block content %}
+    <div class="col-8 mt-5">
+        <div id="alert-box"></div>
+        <form id="a-form" class="form-group mt-5 text-center" method="post" action="{% url 'store' %}">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <button class="btn btn-lg btn-outline-secondary" type="submit">Submit</button>
+        </form>
+    </div>
+
+{% endblock content %}

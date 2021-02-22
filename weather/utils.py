@@ -18,6 +18,9 @@ if Keys.objects.filter(name='Map').exists():
     MAP_BOX_KEY = mkey.key
 
 
+# TODO: Fix this migration issue
+
+
 def weather(address):
     map_address = address.replace(' ', '%20')
     map_call = f'https://api.mapbox.com/geocoding/v5/mapbox.places/{map_address}.json?types=address&access_token={MAP_BOX_KEY}'
@@ -26,7 +29,8 @@ def weather(address):
     lat = coordinates_data['features'][0]['center'][1]
     weather_call = f'https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&units=metric&exclude=alerts,minutely&appid={WEATHER_KEY}'
     one_call = requests.get(weather_call).json()
-    forecast_date = datetime.fromtimestamp(one_call['current']['dt']).strftime('%A, %d %B %Y %H:%M')
+    forecast_date = datetime.fromtimestamp(one_call['current']['dt'])
+    # .strftime('%A, %d %B %Y %H:%M')
     feels_like = one_call['current']['feels_like']
     next_parse = one_call['daily']
     daily_data = {}

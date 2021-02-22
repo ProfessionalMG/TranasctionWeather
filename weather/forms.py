@@ -10,7 +10,7 @@ class AddressForm(forms.Form):
 class WeatherForm(forms.ModelForm):
     class Meta:
         model = Weather
-        fields = '__all__'
+        fields = ('address',)
 
 
 class KeysForm(forms.ModelForm):
