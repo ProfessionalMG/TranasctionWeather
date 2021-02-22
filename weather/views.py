@@ -1,8 +1,12 @@
 # Create your views here.
+import json
+from datetime import datetime
+from pprint import pprint
 
-from django.http import JsonResponse
+from django.core.serializers import serialize
+from django.http import HttpResponse
 from django.shortcuts import redirect
-from django.views.generic import FormView, CreateView, ListView
+from django.views.generic import FormView, CreateView
 
 from .forms import AddressForm, WeatherForm, KeysForm
 from .models import Weather, Keys
@@ -13,23 +17,37 @@ from .utils import weather
 class IndexView(FormView):
     template_name = 'weather/index.html'
     form_class = AddressForm
-    success_url = '/store'
-
-    def form_valid(self, form):
-        # TODO: Get Ajax form to work properly
-        if self.request.is_ajax():
-            data = weather(form.cleaned_data['address'])
-            return JsonResponse(data)
-        else:
-            return super(IndexView, self).form_valid(form)
-
-    def get_context_data(self, **kwargs):
-        context = super(IndexView, self).get_context_data(**kwargs)
-        context['forecasts'] = Weather.objects.all()
-        return context
+    success_url = '/home'
 
 
-# Requirement 2
+def get_address(request):
+    if request.method == 'POST':
+        post_text = request.POST.get('address')
+        response_data = weather(post_text)
+        response_data['date'] = str(response_data['date'])
+        pprint(response_data)
+
+        return HttpResponse(
+            json.dumps(response_data),
+            content_type="application/json"
+        )
+    return HttpResponse(
+        json.dumps({"nothing to see": "this isn't happening"}),
+        content_type="application/json"
+    )
+    # Requirement 2
+
+
+# TODO: get button showing all historical saves to work
+def get_data(request):
+    if request.method == 'GET':
+        climate = serialize('json', Weather.objects.all())
+        return HttpResponse(
+            json.dumps(climate),
+            content_type="application/json"
+        )
+
+
 class StoreDBView(CreateView):
     template_name = 'weather/create.html'
     form_class = WeatherForm
@@ -37,28 +55,13 @@ class StoreDBView(CreateView):
 
     def form_valid(self, form):
         data = self.request.POST['address']
-        info = weather(data)
-        form.instance.address = data
-        form.instance.date = info['date']
-        form.instance.feels_like = int(info['feels'])
-        form.save()
-        return redirect('home')
-
-
-# TODO: Get Ajax to store Results from check
-
-
-# Requirement 3
-class HistoricalListView(ListView):
-    template_name = 'weather/list.html'
-    queryset = Weather
-
-    # TODO: get button showing all historical saves to work
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(HistoricalListView, self).get_context_data(**kwargs)
-        context['query'] = Weather.objects.all()
-        return context
+        if data:
+            info = weather(data)
+            form.instance.address = data
+            form.instance.date = datetime.strptime(info['date'], '%A, %d %B %Y %H:%M')
+            form.instance.feels_like = int(info['feels'])
+            form.save()
+            return redirect('home')
 
 
 class KeyView(CreateView):

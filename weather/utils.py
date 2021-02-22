@@ -29,8 +29,8 @@ def weather(address):
     lat = coordinates_data['features'][0]['center'][1]
     weather_call = f'https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&units=metric&exclude=alerts,minutely&appid={WEATHER_KEY}'
     one_call = requests.get(weather_call).json()
-    forecast_date = datetime.fromtimestamp(one_call['current']['dt'])
-    # .strftime('%A, %d %B %Y %H:%M')
+    forecast_date = datetime.fromtimestamp(one_call['current']['dt']).strftime('%A, %d %B %Y %H:%M')
+    # forecast_date = one_call['current']['dt']
     feels_like = one_call['current']['feels_like']
     next_parse = one_call['daily']
     daily_data = {}
