@@ -45,7 +45,6 @@ def get_address(request):
 def get_data(request):
     if request.method == 'GET':
         climate = serialize('json', Weather.objects.all())
-        print(climate)
         return HttpResponse(
             json.dumps(climate),
             content_type="application/json"

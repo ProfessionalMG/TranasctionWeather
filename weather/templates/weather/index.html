@@ -1,34 +1,41 @@
 {% load static %}
-{% include 'base.html' %}
+{% include 'base2.html' %}
 {% load crispy_forms_tags %}
 
 {% block content %}
-    <div class="col">
-        <div id="alert-box"></div>
-        <form id="a-form" class="form-group mt-5 text-center" method="post" action="{% url 'get_address' %}">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <div id="results"></div>
-            <button class="btn btn-lg btn-outline-secondary" type="submit">Submit</button>
-        </form>
-    </div>
+    <section class="section section-a">
+        <div class="container">
+            <div id="alert-box"></div>
+            <form id="a-form" class="form-group mt-5 text-center" method="post" action="{% url 'get_address' %}">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <div id="results"></div>
+                <button class="btn btn-lg btn-outline-secondary" type="submit">Submit</button>
+            </form>
+            <div id="talk" class="card mt-5 text-center">
+            </div>
+        </div>
 
-    <div id="talk" class="card mt-5 text-center">
-    </div>
-
-    <form id="b-form" class="form-group mt-5 text-center" method="post" action="{% url 'store' %}">
-        {% csrf_token %}
-        {{ form.field.as_hidden }}
-        <div id="results2"></div>
-        <button class="btn btn-lg btn-outline-secondary" type="submit">Save</button>
-    </form>
-
-    <div class="mt-5 text-center">
-        <a class="btn btn-lg btn-outline-secondary " type="submit" id="s-button">List</a>
-        <ul id="talk2"></ul>
-    </div>
+        <div class="container">
+            <form id="b-form" class="form-group mt-5 text-center" method="post" action="{% url 'store' %}">
+                {% csrf_token %}
+                {{ form.field.as_hidden }}
+                <div id="results2"></div>
+                <button class="btn btn-lg btn-outline-secondary" type="submit">Save</button>
+            </form>
+            <div class="mt-5 text-center">
+                <button class="btn btn-lg btn-outline-secondary " type="button" id="s-button">List</button>
+                <ul id="talk2"></ul>
+            </div>
+        </div>
+    </section>
 
 {% endblock content %}
+
+<footer>
+    <p>Author: Bawo Mgemane<br>
+        <a href="mailto:bawo@mahlubandile.co.za">bawo@mahlubandile.co.za</a></p>
+</footer>
 
 {% block javascript %}
     <script>
@@ -65,7 +72,7 @@
                 // handle a non-successful response
                 error: function (xhr, errmsg, err) {
                     $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: " + errmsg +
-                        " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+                        " <a href='home/' class='close'>&times;</a></div>"); // add the error to the dom
                 }
             });
         };
