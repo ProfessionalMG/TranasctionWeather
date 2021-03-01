@@ -3,36 +3,31 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-    <div class="container">
-        <div class="row mt-5 text-center">
-
-            <div class="col-8 mt-5">
-                <div id="alert-box"></div>
-                <form id="a-form" class="form-group mt-5 text-center" method="post" action="{% url 'get_address' %}">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <div id="results"></div>
-                    <button class="btn btn-lg btn-outline-secondary" type="submit">Submit</button>
-                </form>
-            </div>
-
-            <ul id="talk"></ul>
-            <div class="col-8 mt-5">
-                <form id="b-form" class="form-group mt-5 text-center" method="post" action="{% url 'store' %}">
-                    {% csrf_token %}
-                    {{ form.field.as_hidden }}
-                    <div id="results2"></div>
-                    <button class="btn btn-lg btn-outline-secondary" type="submit">Save</button>
-                </form>
-            </div>
-
-            <div class="col-8 mt-5 text-center">
-                <a class="btn btn-lg btn-outline-secondary" type="submit" id="s-button">List</a>
-                <ul id="talk2"></ul>
-            </div>
-
-        </div>
+    <div class="col">
+        <div id="alert-box"></div>
+        <form id="a-form" class="form-group mt-5 text-center" method="post" action="{% url 'get_address' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div id="results"></div>
+            <button class="btn btn-lg btn-outline-secondary" type="submit">Submit</button>
+        </form>
     </div>
+
+    <div id="talk" class="card mt-5 text-center">
+    </div>
+
+    <form id="b-form" class="form-group mt-5 text-center" method="post" action="{% url 'store' %}">
+        {% csrf_token %}
+        {{ form.field.as_hidden }}
+        <div id="results2"></div>
+        <button class="btn btn-lg btn-outline-secondary" type="submit">Save</button>
+    </form>
+
+    <div class="mt-5 text-center">
+        <a class="btn btn-lg btn-outline-secondary " type="submit" id="s-button">List</a>
+        <ul id="talk2"></ul>
+    </div>
+
 {% endblock content %}
 
 {% block javascript %}
@@ -61,7 +56,8 @@
                 data: {address: $('#id_address').val()}, // data sent with the post request
                 success: function (json) {
                     {#$('#id_address').val(''); // remove the value from the input#}
-                    $("#talk").prepend("<p><strong>" + json.date + "</strong> - <em> Feels Like " + json.feels + "&#8451;</p><br>"
+                    $("#talk").prepend("<div class='card-body'><h5 class='card-title'>" + json.addr + "</h5><h6 class='card-subtitle mb-2 text-muted'>On " + json.date + "</h6><h3 class='card-text'>" + json.feels
+                        + "&#8451;</h3></div>"
                     )
                     ;
                 },
@@ -73,7 +69,6 @@
                 }
             });
         };
-
 
         function save_post() {
             $.ajaxSetup({
@@ -88,7 +83,7 @@
                 }, // data sent with the post request
                 success: function (json) {
                     $('#id_address').val(''); // remove the value from the input
-                    $('#results2').html("<div class='alert-box alert radius' data-alert>Success: " +
+                    $('#results2').html("<div class='alert alert-success'>Success " +
                         " <a href='#' class='close'>&times;</a></div>");
                 },
 
@@ -105,7 +100,7 @@
                 url: "{% url 'get_data' %}",
                 type: "GET",
                 success: function (json) {
-                    $('#talk2').prepend('<p>' + json + '</>');
+                    $('#talk2').prepend('<p>' + json + '</p>');
                 },
                 error: function () {
                     alert("error");

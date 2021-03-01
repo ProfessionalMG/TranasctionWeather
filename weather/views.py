@@ -1,12 +1,11 @@
 # Create your views here.
 import json
 from datetime import datetime
-from pprint import pprint
 
 from django.core.serializers import serialize
 from django.http import HttpResponse
 from django.shortcuts import redirect
-from django.views.generic import FormView, CreateView
+from django.views.generic import FormView, CreateView, TemplateView
 
 from .forms import AddressForm, WeatherForm, KeysForm
 from .models import Weather, Keys
@@ -20,12 +19,17 @@ class IndexView(FormView):
     success_url = '/home'
 
 
+class VidView(TemplateView):
+    template_name = 'base2.html'
+
+
 def get_address(request):
     if request.method == 'POST':
         post_text = request.POST.get('address')
         response_data = weather(post_text)
         response_data['date'] = str(response_data['date'])
-        pprint(response_data)
+        response_data['address'] = post_text
+        # pprint(response_data)
 
         return HttpResponse(
             json.dumps(response_data),
@@ -38,10 +42,10 @@ def get_address(request):
     # Requirement 2
 
 
-# TODO: get button showing all historical saves to work
 def get_data(request):
     if request.method == 'GET':
         climate = serialize('json', Weather.objects.all())
+        print(climate)
         return HttpResponse(
             json.dumps(climate),
             content_type="application/json"
